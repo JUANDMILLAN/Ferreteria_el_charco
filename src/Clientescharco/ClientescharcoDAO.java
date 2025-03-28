@@ -8,10 +8,10 @@ import java.sql.SQLException;
 
 public class ClientescharcoDAO
 {
-//instanciamos un objeto de la clase conexion para poder conectarnos a la base de datos
+    //instanciamos un objeto de la clase conexion para poder conectarnos a la base de datos
     private ConexionBD conexionBD = new ConexionBD();
 
-//creamos el metodo para agregar un nuevo cliente
+    //creamos el metodo para agregar un nuevo cliente
     public  void agregar(Clientescharco clientescharco)
     {
         //creamos un objeto de la clase conexion para poder conectarnos a la base de datos
@@ -110,14 +110,14 @@ public class ClientescharcoDAO
             pst.setString(4, clientescharco.getCorreo());
             pst.setInt(5, clientescharco.getId());
 //si el resultado es mayor a 0, mostramos un mensaje de que el cliente ha sido actualizado correctamente
-        int resultado = pst.executeUpdate();
-        if (resultado > 0)
-        {
-            JOptionPane.showMessageDialog(null, "Cliente actualizado correctamente.");
-        } else
-        {
-            JOptionPane.showMessageDialog(null, "Error al actualizar cliente.");
-        }
+            int resultado = pst.executeUpdate();
+            if (resultado > 0)
+            {
+                JOptionPane.showMessageDialog(null, "Cliente actualizado correctamente.");
+            } else
+            {
+                JOptionPane.showMessageDialog(null, "Error al actualizar cliente.");
+            }
 
         }
         catch (SQLException e)
