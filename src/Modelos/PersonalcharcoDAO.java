@@ -1,24 +1,16 @@
-package Personalcharco;
-
-
-
+package Modelos;
 import Conexion.ConexionBD;
+import Entidad.Personalcharco;
 
 import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-
-
-
-
-
 public class PersonalcharcoDAO
 {
     private ConexionBD conexionBD = new ConexionBD();
 
-    // Metodo para agregar un Personal
+    // Metodo para agregar un empleado
     public void agregar(Personalcharco personalcharco)
     {
         Connection con = conexionBD.getConnection();
@@ -56,11 +48,11 @@ public class PersonalcharcoDAO
     }
 
 
-    // Metodo para eliminar un cliente
+    // Metodo para eliminar un empleado
     public void eliminar(int id)
     {
         Connection con = conexionBD.getConnection();
-        String query = "DELETE FROM personal WHERE id = ?";
+        String query = "DELETE FROM empleados WHERE id_empleado = ?";
 
         try
         {
@@ -92,10 +84,10 @@ public class PersonalcharcoDAO
 
     }
 
-    // Metodo para actualizar un cliente
+    // Metodo para actualizar un empleado
     public void actualizar(Personalcharco personalcharco) {
         Connection con = conexionBD.getConnection();
-        String query = "UPDATE personal SET nombre = ?, cargo = ?, salario = ? WHERE id = ?";
+        String query = "UPDATE empleados SET nombre = ?, cargo = ?, salario = ? WHERE id_empleado = ?";
 
 
         try
