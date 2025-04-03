@@ -1,8 +1,9 @@
-package Personalcharco;
+package Modelos;
 
 
 
 import Conexion.ConexionBD;
+import Entidad.Personalcharco;
 
 import javax.swing.*;
 import java.sql.Connection;
