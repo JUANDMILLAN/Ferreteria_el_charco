@@ -1,7 +1,6 @@
 package Modelos;
 
 import Conexion.ConexionBD;
-import Entidad.Clientescharco;
 import Entidad.Proveedorescharco;
 
 import javax.swing.*;

@@ -46,20 +46,20 @@ public class ProveedorescharcoGUI {
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                mostrar();
                 String nombre = nombreText.getText();
                 String contacto = contactoText.getText();
                 int id_proveedor = Integer.parseInt(idText.getText());
                 Proveedorescharco proveedorescharco = new Proveedorescharco(id_proveedor,nombre,contacto);
                 proveedorescharcoDAO.actualizar(proveedorescharco);
-                mostrar();
             }
         });
         eliminarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                mostrar();
                 int id_proveedor = Integer.parseInt(idText.getText());
                 proveedorescharcoDAO.eliminar(id_proveedor);
-                mostrar();
             }
         });
         tabla.addMouseListener(new MouseAdapter() {
