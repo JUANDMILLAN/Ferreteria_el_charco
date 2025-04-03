@@ -1,8 +1,6 @@
 package Modelos;
-
 import Conexion.ConexionBD;
 import Entidad.Clientescharco;
-
 import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
