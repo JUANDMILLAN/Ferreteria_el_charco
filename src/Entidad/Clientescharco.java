@@ -1,4 +1,4 @@
-package Clientescharco;
+package Entidad;
 
 public class Clientescharco {
     //colocamos los atributos de la base de datos de la tabla clientes
