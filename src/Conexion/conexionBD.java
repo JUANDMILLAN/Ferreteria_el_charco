@@ -2,7 +2,7 @@ package Conexion;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class ConexionBD {
+public class conexionBD {
     //creacion objeto
     public Connection getConnection() {
         //no tiene ninguna coneccion
