@@ -2,17 +2,16 @@ package Vistas;
 
 import javax.swing.*;
 
-public class ProveedoresGUI extends JPanel {
+public class VentasGUI extends JPanel {
     public JPanel mainPanel;
     private JTable table1;
+    private JTable table2;
+    private JButton imprimirFacturaButton;
+    private JButton guardarVentaButton;
     private JButton agregarButton;
-    private JButton eliminarButton;
-    private JButton editarButton;
-    private JTextField textField1;
-    private JTextField textField2;
+    private JButton cancelarButton;
 
-    public ProveedoresGUI() {
-
+    public VentasGUI (){
         add(mainPanel);
     }
 

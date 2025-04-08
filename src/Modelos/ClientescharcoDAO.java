@@ -1,5 +1,5 @@
 package Modelos;
-import Conexion.ConexionBD;
+import Conexion.conexionBD;
 import Entidad.Clientescharco;
 import javax.swing.*;
 import java.sql.Connection;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ClientescharcoDAO
 {
     //instanciamos un objeto de la clase conexion para poder conectarnos a la base de datos
-    private ConexionBD conexionBD = new ConexionBD();
+    private Conexion.conexionBD conexionBD = new conexionBD();
 
     //creamos el metodo para agregar un nuevo cliente
     public  void agregar(Clientescharco clientescharco)

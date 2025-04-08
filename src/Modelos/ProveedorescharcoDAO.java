@@ -1,6 +1,6 @@
 package Modelos;
 
-import Conexion.ConexionBD;
+import Conexion.conexionBD;
 import Entidad.Proveedorescharco;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class ProveedorescharcoDAO {
     //instanciamos un objeto de la clase conexion para poder conectarnos a la base de datos
 
-    private final ConexionBD conexionBD = new ConexionBD();
+    private final Conexion.conexionBD conexionBD = new conexionBD();
 
     //creamos el metodo para agregar un nuevo proveedor
     public void agregar(Proveedorescharco proveedorescharco) {

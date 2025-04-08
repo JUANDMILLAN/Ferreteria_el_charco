@@ -1,31 +1,29 @@
 package Vistas;
 
-import Modelos.ClientescharcoDAO;
-
 import javax.swing.*;
+import com.formdev.flatlaf.FlatDarculaLaf;
 
-public class ClientescharcoGUI extends JFrame{
-    private JPanel main;
+import java.awt.*;
+
+public class ClientescharcoGUI extends JPanel {
+    private JPanel mainPanel;
     private JTable table1;
-    private JList list1;
-    private JButton button1;
-    private JButton button2;
-    private JButton button3;
-    private JButton button4;
+    private JButton agregarButton;
+    private JButton editarButton;
+    private JButton eliminarButton;
+    private JButton limpiarButton;
     private JTextField textField1;
     private JTextField textField2;
     private JTextField textField3;
     private JTextField textField4;
 
-
-    ClientescharcoDAO clientescharcoDAO = new ClientescharcoDAO();
-
-    public ClientescharcoGUI(){
-        setContentPane(main);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(1000, 700);
-        setResizable(false);
-        setLocationRelativeTo(null);
+    public ClientescharcoGUI() {
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(1000,1000));
+        add(mainPanel);
     }
 
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
 }

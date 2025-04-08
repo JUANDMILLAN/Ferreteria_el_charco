@@ -1,78 +1,104 @@
 package Vistas;
-import Entidad.Proveedorescharco;
 
-import java.awt.event.ActionEvent;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import CHAT.servidorChat;
+import CHAT.chatGUI;
+import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class MenuGUI {
     private JPanel main;
-    private JComboBox comboBox1;
+    private JComboBox<String> comboBox1;
     private JButton venderButton;
-    private JComboBox comboBox2;
-    private JComboBox comboBox3;
     private JButton chatButton;
     private JButton salirButton;
+    private JPanel panelContenido;
+    private JButton historialButton;
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Menu");
+        try {
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        JFrame frame = new JFrame("Menú Principal");
         frame.setContentPane(new MenuGUI().main);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setVisible(true);
-        frame.setSize(880, 770);
+        frame.setSize(1120, 700);
         frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
+
     public MenuGUI() {
+        // Iniciar servidor de chat en un hilo separado
+        new Thread(() -> {
+            try {
+                servidorChat.main(new String[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+        comboBox1.removeAllItems();
+        comboBox1.addItem("Clientes");
+        comboBox1.addItem("Personal");
+        comboBox1.addItem("Proveedores");
+        comboBox1.addItem("Inventario");
+
         comboBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
                 String seleccion = (String) comboBox1.getSelectedItem();
 
+                panelContenido.removeAll();
+                panelContenido.setLayout(new BorderLayout());
 
+                if (seleccion != null && seleccion.equals("Clientes")) {
+                    ClientescharcoGUI clientesGUI = new ClientescharcoGUI();
+                    clientesGUI.getMainPanel().setPreferredSize(new Dimension(100, 100));
+                    panelContenido.add(clientesGUI.getMainPanel());
 
-                if (seleccion != null && seleccion.equals("Clientes")){
-                    ClientescharcoGUI clientescharcoGUI = new ClientescharcoGUI();
-                    clientescharcoGUI.setVisible(true);
-                    
+                } else if (seleccion.equals("Personal")) {
+                    PersonalcharcoGUI personalGUI = new PersonalcharcoGUI();
+                    personalGUI.getMainPanel().setPreferredSize(new Dimension(100, 100));
+                    panelContenido.add(personalGUI.getMainPanel());
 
-
-                }else if (seleccion != null && seleccion.equals("Personal")){
-                    PersonalcharcoGUI personalcharcoGUI = new PersonalcharcoGUI();
-                    personalcharcoGUI.setVisible(true);
-
-                }else if (seleccion != null && seleccion.equals("Proveedores")){
+                } else if (seleccion.equals("Proveedores")) {
                     ProveedoresGUI proveedoresGUI = new ProveedoresGUI();
-                    proveedoresGUI.setVisible(true);
+                    proveedoresGUI.getMainPanel().setPreferredSize(new Dimension(100, 100));
+                    panelContenido.add(proveedoresGUI.getMainPanel());
 
-                }else if (seleccion != null && seleccion.equals("Inventario")){
+                } else if (seleccion.equals("Inventario")) {
                     InventarioGUI inventarioGUI = new InventarioGUI();
-                    inventarioGUI.setVisible(true);
+                    inventarioGUI.getMainPanel().setPreferredSize(new Dimension(100, 100));
+                    panelContenido.add(inventarioGUI.getMainPanel());
                 }
 
-            }
-        });
-        salirButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                System.exit(0);
-            }
-        });
-        venderButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VentaGUI ventaGUI = new VentaGUI();
-                ventaGUI.setVisible(true);
+                panelContenido.revalidate();
+                panelContenido.repaint();
             }
         });
 
+        venderButton.addActionListener(e ->
+        {
+            panelContenido.removeAll();
+
+
+            VentasGUI ventasGUI = new VentasGUI();
+            ventasGUI.getMainPanel().setPreferredSize(new Dimension(100, 100));
+
+            panelContenido.setLayout(new BorderLayout());
+            panelContenido.add(ventasGUI.getMainPanel());
+
+            panelContenido.revalidate();
+            panelContenido.repaint();
+        });
+
+        chatButton.addActionListener(e -> new chatGUI("EMPLEADO").setVisible(true));
+
+        salirButton.addActionListener(e -> System.exit(0));
     }
 }
-
-
-
-
-

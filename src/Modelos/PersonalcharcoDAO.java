@@ -1,5 +1,5 @@
 package Modelos;
-import Conexion.ConexionBD;
+import Conexion.conexionBD;
 import Entidad.Personalcharco;
 
 import javax.swing.*;
@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 public class PersonalcharcoDAO
 {
-    private ConexionBD conexionBD = new ConexionBD();
+    private Conexion.conexionBD conexionBD = new conexionBD();
 
     // Metodo para agregar un empleado
     public void agregar(Personalcharco personalcharco)
