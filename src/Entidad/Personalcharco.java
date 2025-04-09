@@ -6,44 +6,53 @@ public class Personalcharco {
     String cargo;
     double salario;
 
-    public Personalcharco(int id_empleado, String nombre, String cargo, double salario){
+    // Constructor con parámetros
+    public Personalcharco(int id_empleado, String nombre, String cargo, double salario) {
         this.id_empleado = id_empleado;
         this.nombre = nombre;
         this.cargo = cargo;
         this.salario = salario;
     }
-     public int getId() {
 
+    // Constructor vacío
+    public Personalcharco() {}
+
+    // Getters y setters
+    public int getId() {
         return id_empleado;
     }
-    public void setId(int id) {
 
+    public void setId(int id_empleado) {
         this.id_empleado = id_empleado;
     }
-    public String getNombre() {
 
+    public String getNombre() {
         return nombre;
     }
-    public void setNombre(String nombre) {
 
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    public String getcargo() {
 
+    public String getCargo() {
         return cargo;
     }
-    public void setcargo(String  cargo) {
 
+    public void setCargo(String cargo) {
         this.cargo = cargo;
     }
-    public double getsalario() {
 
+    public double getSalario() {
         return salario;
     }
-    public void setsalario(double salario) {
 
+    public void setSalario(double salario) {
         this.salario = salario;
     }
 
-
+    // Para mostrar el nombre en el combo
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

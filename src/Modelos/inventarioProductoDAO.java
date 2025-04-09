@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class inventarioProductoDAO {
     //instanciamos un objeto de la clase conexion para poder conectarnos a la base de datos
-    private final Conexion.conexionBD conexionBD = new conexionBD();
+    private Conexion.conexionBD conexionBD = new conexionBD();
 
     //creamos el metodo para agregar un nuevo producto
     public  void agregar(inventarioProductos inventarioProductos)
@@ -20,7 +20,7 @@ public class inventarioProductoDAO {
 
         //creamos la consulta para insertar un nuevo producto
         String query = "INSERT INTO inventario_productos (categoria, nombre_producto, precio_proveedor, precio_venta, cantidad_stock) VALUES (?, ?, ?, ?, ?)";
-//intentamos insertar un nuevo producto
+        //intentamos insertar un nuevo producto
         try
         {
             PreparedStatement pst = con.prepareStatement(query);

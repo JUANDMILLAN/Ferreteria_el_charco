@@ -9,7 +9,6 @@ public class PersonalcharcoGUI extends JPanel {
     private JTextField textField3;
     private JComboBox comboBox1;
     private JButton agregarButton;
-    private JButton volverButton;
     private JButton actualizarButton;
     private JButton eliminarButton;
 
