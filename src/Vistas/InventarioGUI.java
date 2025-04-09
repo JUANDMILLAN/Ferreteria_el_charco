@@ -1,7 +1,5 @@
 package Vistas;
 
-import Modelos.InventarioDAO;
-
 import javax.swing.*;
 
 public class InventarioGUI extends JPanel {
@@ -10,8 +8,6 @@ public class InventarioGUI extends JPanel {
     private JButton agregarButton;
     private JButton editarButton;
     private JTable table1;
-
-    InventarioDAO inventarioDAO = new InventarioDAO();
 
     public InventarioGUI() {
         add(mainPanel);
