@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class inventarioProductoDAO {
+public class InventarioProductoDAO {
     //instanciamos un objeto de la clase conexion para poder conectarnos a la base de datos
     private Conexion.conexionBD conexionBD = new conexionBD();
 
@@ -105,7 +105,7 @@ public class inventarioProductoDAO {
         //creamos un objeto de la clase conexion para poder conectarnos a la base de datos
         Connection con = conexionBD.getConnection();
         //creamos la consulta para actualizar un producto
-        String query = "UPDATE inventario_productos SET categotia = ?, nombre_producto = ?, precio_proveedor = ?, precio_venta = ?, cantidad_stock = ? WHERE id_producto = ?";
+        String query = "UPDATE inventario_productos SET categoria = ?, nombre_producto = ?, precio_proveedor = ?, precio_venta = ?, cantidad_stock = ? WHERE id_producto = ?";
 //intentamos actualizar un producto
         try {
             PreparedStatement pst = con.prepareStatement(query);

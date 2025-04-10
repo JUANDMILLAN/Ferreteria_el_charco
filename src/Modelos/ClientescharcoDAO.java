@@ -1,7 +1,10 @@
 package Modelos;
+
 import Conexion.conexionBD;
 import Entidad.Clientescharco;
 import Entidad.inventarioProductos;
+
+import java.awt.*;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -42,7 +45,7 @@ public class ClientescharcoDAO {
 
     public void eliminar(int id) {
         Connection con = conexionBD.getConnection();
-        String query = "DELETE FROM clientes WHERE id = ?";
+        String query = "DELETE FROM clientes WHERE id_cliente = ?";
         try {
             PreparedStatement pst = con.prepareStatement(query);
             pst.setInt(1, id);
@@ -65,7 +68,7 @@ public class ClientescharcoDAO {
 
     public void actualizar(Clientescharco clientescharco) {
         Connection con = conexionBD.getConnection();
-        String query = "UPDATE clientes SET nombre = ?, telefono = ?, direccion = ?, correo = ? WHERE id = ?";
+        String query = "UPDATE clientes SET nombre = ?, telefono = ?, direccion = ?, correo = ? WHERE id_cliente = ?";
         try {
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, clientescharco.getNombre());
