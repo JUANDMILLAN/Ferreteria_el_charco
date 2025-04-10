@@ -10,7 +10,6 @@ public class conexionBD {
 //intenta obtener la url, la base de datos el nombre y la contraseña
         try {
             con= DriverManager.getConnection("jdbc:mysql://localhost:3306/el_charco","root", "");
-            System.out.println("Conexion exitosa");
         }
         //para atrapar un  error si lo hay
         catch (Exception e)

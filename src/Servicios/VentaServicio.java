@@ -111,4 +111,123 @@ public class VentaServicio {
             e.printStackTrace();
         }
     }
+
+    public ResultSet obtenerVentasFiltradas(String filtro) {
+        String condicionFecha = "";
+
+        switch (filtro) {
+            case "Diario":
+                condicionFecha = "DATE(fecha) = CURDATE()";
+                break;
+            case "Semanal":
+                condicionFecha = "YEARWEEK(fecha, 1) = YEARWEEK(CURDATE(), 1)";
+                break;
+            case "Mensual":
+                condicionFecha = "MONTH(fecha) = MONTH(CURDATE()) AND YEAR(fecha) = YEAR(CURDATE())";
+                break;
+        }
+
+        String sql = "SELECT id_venta, total, fecha, estado FROM registro_ventas WHERE " + condicionFecha;
+        conexionBD conBD = new conexionBD();
+
+        try {
+            Connection conn = conBD.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            return ps.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+    public ResultSet obtenerProductosMasVendidos(String filtro) {
+        String condicionFecha = "";
+
+        switch (filtro) {
+            case "Diario":
+                condicionFecha = "DATE(v.fecha) = CURDATE()";
+                break;
+            case "Semanal":
+                condicionFecha = "YEARWEEK(v.fecha, 1) = YEARWEEK(CURDATE(), 1)";
+                break;
+            case "Mensual":
+                condicionFecha = "MONTH(v.fecha) = MONTH(CURDATE()) AND YEAR(v.fecha) = YEAR(CURDATE())";
+                break;
+        }
+
+        String sql = "SELECT p.nombre_producto, SUM(dv.cantidad) AS total_vendidos " +
+                "FROM detalle_venta dv " +
+                "INNER JOIN inventario_productos p ON dv.id_producto = p.id_producto " +
+                "INNER JOIN registro_ventas v ON dv.id_venta = v.id_venta " +
+                "WHERE " + condicionFecha + " " +
+                "GROUP BY p.nombre_producto " +
+                "ORDER BY total_vendidos DESC " +
+                "LIMIT 5";
+
+        conexionBD conBD = new conexionBD();
+
+        try {
+            Connection conn = conBD.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            return ps.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+    public ResultSet obtenerClientesTop(String filtro) {
+        String condicionFecha = "";
+
+        switch (filtro) {
+            case "Diario":
+                condicionFecha = "DATE(v.fecha) = CURDATE()";
+                break;
+            case "Semanal":
+                condicionFecha = "YEARWEEK(v.fecha, 1) = YEARWEEK(CURDATE(), 1)";
+                break;
+            case "Mensual":
+                condicionFecha = "MONTH(v.fecha) = MONTH(CURDATE()) AND YEAR(v.fecha) = YEAR(CURDATE())";
+                break;
+        }
+
+        String sql = "SELECT c.nombre AS nombre_cliente, SUM(v.total) AS total_compras " +
+                "FROM registro_ventas v " +
+                "INNER JOIN clientes c ON v.id_cliente = c.id_cliente " +
+                "WHERE " + condicionFecha + " " +
+                "GROUP BY c.nombre " +
+                "ORDER BY total_compras DESC " +
+                "LIMIT 5";
+
+        conexionBD conBD = new conexionBD();
+
+        try {
+            Connection conn = conBD.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            return ps.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+    public java.sql.Date obtenerFechaFiltro(String filtro) {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+
+        switch (filtro) {
+            case "Diario" -> cal.add(java.util.Calendar.DAY_OF_MONTH, -1);
+            case "Semanal" -> cal.add(java.util.Calendar.DAY_OF_MONTH, -7);
+            case "Mensual" -> cal.add(java.util.Calendar.MONTH, -1);
+        }
+
+        return new java.sql.Date(cal.getTimeInMillis());
+    }
+
+
 }
