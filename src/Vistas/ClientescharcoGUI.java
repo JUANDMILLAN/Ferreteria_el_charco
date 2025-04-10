@@ -30,6 +30,8 @@ public class ClientescharcoGUI extends JPanel {
     private JTextField textFieldtelefonocliente;
     private JTextField textFieldcorreocliente;
     private JTextField textField1;
+    private JLabel labelClientesTotales;
+    private JLabel labelClienteFrecuente;
     int filas = 0;
 
     ClientescharcoDAO clientescharcoDAO = new ClientescharcoDAO();
@@ -41,6 +43,8 @@ public class ClientescharcoGUI extends JPanel {
         add(mainPanel);
         textField1.setEnabled(false);
         mostrarDatos();
+        actualizarTarjetasClientes();
+
 
         agregarButton.addActionListener(new ActionListener() {
             @Override
@@ -55,6 +59,7 @@ public class ClientescharcoGUI extends JPanel {
                 clientescharcoDAO.agregar(clientes);
                 clear();
                 mostrarDatos();
+                actualizarTarjetasClientes();
 
 
             }
@@ -75,7 +80,7 @@ public class ClientescharcoGUI extends JPanel {
                 clientescharcoDAO.actualizar(clientes);
                 clear();
                 mostrarDatos();
-
+                actualizarTarjetasClientes();
 
             }
         });
@@ -87,6 +92,8 @@ public class ClientescharcoGUI extends JPanel {
                 clientescharcoDAO.eliminar(id);
                 clear();
                 mostrarDatos();
+                actualizarTarjetasClientes();
+
             }
         });
 
@@ -144,6 +151,36 @@ public class ClientescharcoGUI extends JPanel {
             JOptionPane.showMessageDialog(null, "Error al mostrar los datos: " + e.getMessage());
         }
     }
+
+    public String obtenerClienteMasFrecuente() {
+        String nombre = "";
+        String sql = "SELECT c.nombre FROM registro_ventas rv " +
+                "JOIN clientes c ON rv.id_cliente = c.id_cliente " +
+                "GROUP BY c.id_cliente ORDER BY COUNT(*) DESC LIMIT 1";
+
+        try (Connection con = new conexionBD().getConnection();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            if (rs.next()) {
+                nombre = rs.getString("nombre");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nombre;
+    }
+
+
+    public void actualizarTarjetasClientes() {
+        int totalClientes = table1.getRowCount();
+        labelClientesTotales.setText(String.valueOf(totalClientes));
+
+        String clienteFrecuente = obtenerClienteMasFrecuente();
+        labelClienteFrecuente.setText(clienteFrecuente != null ? clienteFrecuente : "Sin datos");
+    }
+
     public JPanel getMainPanel() {
         return mainPanel;
     }

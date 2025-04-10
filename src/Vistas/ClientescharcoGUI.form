@@ -112,7 +112,7 @@
                   <text value="Clientes Totales"/>
                 </properties>
               </component>
-              <component id="9c225" class="javax.swing.JLabel">
+              <component id="9c225" class="javax.swing.JLabel" binding="labelClientesTotales">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -138,12 +138,12 @@
                   <text value="Cliente mas frecuente"/>
                 </properties>
               </component>
-              <component id="4fa0e" class="javax.swing.JLabel">
+              <component id="4fa0e" class="javax.swing.JLabel" binding="labelClienteFrecuente">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Label"/>
+                  <text value="5"/>
                 </properties>
               </component>
             </children>

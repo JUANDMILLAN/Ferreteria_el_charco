@@ -13,22 +13,30 @@ public class HomePanel extends JPanel {
     public JTable table1;
     public JTable table2;
     public JTable table3;
-    private JComboBox<String> comboBox1; // Asegúrate de que esté en el .form con opciones: Diario, Semanal, Mensual
+    private JComboBox<String> comboBox1; // Filtro: Diario, Semanal, Mensual
+    private JComboBox<String> comboBox2; // Cambiar estado: Pendiente, Enviado, Pagado
 
     public HomePanel() {
         add(mainPanel);
 
-        // Configurar ComboBox con opciones si no lo hiciste en el .form
+        // Opciones para comboBox1 (filtro de fecha)
         if (comboBox1.getItemCount() == 0) {
             comboBox1.addItem("Diario");
             comboBox1.addItem("Semanal");
             comboBox1.addItem("Mensual");
         }
 
-        // Cargar ventas por defecto (Diarias)
+        // Opciones para comboBox2 (estado de la venta)
+        if (comboBox2.getItemCount() == 0) {
+            comboBox2.addItem("Pendiente");
+            comboBox2.addItem("Enviado");
+            comboBox2.addItem("Pagado");
+        }
+
+        // Cargar datos por defecto
         cargarDatosFiltrados("Diario");
 
-        // Acción al cambiar filtro
+        // Listener para cambiar el filtro de fechas
         comboBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -36,13 +44,37 @@ public class HomePanel extends JPanel {
                 cargarDatosFiltrados(filtroSeleccionado);
             }
         });
+
+        // Listener para actualizar estado de la venta seleccionada
+        comboBox2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int filaSeleccionada = table1.getSelectedRow();
+
+                if (filaSeleccionada != -1) {
+                    int idVenta = (int) table1.getValueAt(filaSeleccionada, 0);
+                    String nuevoEstado = (String) comboBox2.getSelectedItem();
+
+                    VentaServicio ventaServicio = new VentaServicio();
+                    boolean actualizado = ventaServicio.actualizarEstadoVenta(idVenta, nuevoEstado);
+
+                    if (actualizado) {
+                        JOptionPane.showMessageDialog(null, "Estado actualizado correctamente.");
+                        table1.setValueAt(nuevoEstado, filaSeleccionada, 3);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error al actualizar el estado.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Selecciona una venta para cambiar el estado.");
+                }
+            }
+        });
     }
 
-    // Cargar ventas filtradas en la tabla1
     public void cargarDatosFiltrados(String filtro) {
         VentaServicio servicio = new VentaServicio();
 
-        // 🟩 Tabla 1: Ventas Totales (solo id, total, fecha y estado)
+        // 🟩 Tabla 1: Ventas Totales
         ResultSet rsVentas = servicio.obtenerVentasFiltradas(filtro);
         DefaultTableModel modeloVentas = new DefaultTableModel();
         modeloVentas.setColumnIdentifiers(new String[]{"ID Venta", "Total", "Fecha", "Estado"});
@@ -78,7 +110,7 @@ public class HomePanel extends JPanel {
             e.printStackTrace();
         }
 
-        // 🟨 Tabla 3: Clientes Top (mostrar nombre del cliente)
+        // 🟨 Tabla 3: Clientes Top
         ResultSet rsClientes = servicio.obtenerClientesTop(filtro);
         DefaultTableModel modeloClientes = new DefaultTableModel();
         modeloClientes.setColumnIdentifiers(new String[]{"Nombre Cliente", "Total Comprado"});
@@ -95,8 +127,6 @@ public class HomePanel extends JPanel {
             e.printStackTrace();
         }
     }
-
-
 
     public JPanel getMainPanel() {
         return mainPanel;
