@@ -144,17 +144,6 @@ public class ClientescharcoGUI extends JPanel {
             JOptionPane.showMessageDialog(null, "Error al mostrar los datos: " + e.getMessage());
         }
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Clientescharco");
-        frame.setContentPane(new ClientescharcoGUI().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setSize(700, 500);
-        frame.setResizable(false);
-    }
-
     public JPanel getMainPanel() {
         return mainPanel;
     }

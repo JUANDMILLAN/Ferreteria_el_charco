@@ -38,7 +38,7 @@ public class PersonalcharcoGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String nombre = textField3.getText();
                 String cargo = comboBox1.getSelectedItem().toString();
-                double salario = Double.parseDouble(textField1.getText());
+                int salario = Integer.parseInt(textField1.getText());
 
                 Personalcharco personalcharco = new Personalcharco(0, nombre, cargo, salario);
                 personalcharcoDAO.agregar(personalcharco);
@@ -62,7 +62,7 @@ public class PersonalcharcoGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String nombre = textField3.getText();
                 String cargo = comboBox1.getSelectedItem().toString();
-                double salario = Double.parseDouble(textField1.getText());
+                int salario = Integer.parseInt(textField1.getText());
                 int id = Integer.parseInt(textField2.getText());
 
                 Personalcharco personalcharco = new Personalcharco(id, nombre, cargo, salario);
@@ -122,15 +122,6 @@ public class PersonalcharcoGUI extends JPanel {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al mostrar los datos: " + e.getMessage());
         }
-    }
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Personalcharco");
-        frame.setContentPane(new PersonalcharcoGUI().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setSize(700, 500);
-        frame.setResizable(false);
     }
 
     public JPanel getMainPanel() {

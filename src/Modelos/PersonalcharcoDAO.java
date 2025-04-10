@@ -15,7 +15,7 @@ public class PersonalcharcoDAO {
     // Metodo para agregar un empleado
     public void agregar(Personalcharco personalcharco) {
         Connection con = conexionBD.getConnection();
-        String query = "INSERT INTO personal (nombre, cargo, salario) VALUES (?, ?, ?)";
+        String query = "INSERT INTO empleados (nombre, cargo, salario) VALUES (?, ?, ?)";
 
         try {
             PreparedStatement pst = con.prepareStatement(query);
@@ -92,7 +92,7 @@ public class PersonalcharcoDAO {
         }
     }
 
-    // Método para obtener todos los empleados (para el ComboBox)
+
     public ArrayList<Personalcharco> obtenerTodos() {
         ArrayList<Personalcharco> lista = new ArrayList<>();
         Connection con = conexionBD.getConnection();
