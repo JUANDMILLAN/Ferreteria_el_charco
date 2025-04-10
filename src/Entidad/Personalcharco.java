@@ -4,10 +4,10 @@ public class Personalcharco {
     int id_empleado;
     String nombre;
     String cargo;
-    double salario;
+    int salario;
 
     // Constructor con parámetros
-    public Personalcharco(int id_empleado, String nombre, String cargo, double salario) {
+    public Personalcharco(int id_empleado, String nombre, String cargo, int salario) {
         this.id_empleado = id_empleado;
         this.nombre = nombre;
         this.cargo = cargo;
@@ -42,11 +42,11 @@ public class Personalcharco {
         this.cargo = cargo;
     }
 
-    public double getSalario() {
+    public int getSalario() {
         return salario;
     }
 
-    public void setSalario(double salario) {
+    public void setSalario(int salario) {
         this.salario = salario;
     }
 

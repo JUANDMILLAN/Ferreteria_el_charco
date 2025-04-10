@@ -15,7 +15,7 @@ public class chatGUI extends JFrame {
 
         setTitle("Chat - " + nombre);
         setSize(450, 500);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // 🔽 TÍTULO CENTRADO EN LA PARTE SUPERIOR

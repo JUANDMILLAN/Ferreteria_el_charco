@@ -30,14 +30,14 @@ public class InventarioGUI extends JPanel {
     private JTextField textFieldpcantidad;
     private JTextField textFieldprecioprove;
     private JTextField textFieldprecioventa;
-    private JTextField textField1;
+    private JComboBox comboBox1;
     int filas = 0;
 
     InventarioProductoDAO inventarioProductoDAO = new InventarioProductoDAO();
 
     public InventarioGUI() {
         add(mainPanel);
-        textFieldid.setVisible(false);
+        textFieldid.setEnabled(false);
         mostrarDatos();// Ocultamos el campo de ID
 
 
@@ -46,7 +46,7 @@ public class InventarioGUI extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Obtener los valores de los campos de texto
-                String categoria = textField1.getText();
+                String categoria = comboBox1.getSelectedItem().toString();
                 String nombre_producto = textFieldnombreproducto.getText();
                 int cantidad = Integer.parseInt(textFieldpcantidad.getText());
                 int precioCompra = Integer.parseInt(textFieldprecioprove.getText());
@@ -74,7 +74,7 @@ public class InventarioGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int id = Integer.parseInt(textFieldid.getText());
 
-                String categoria = textField1.getText();
+                String categoria = comboBox1.getSelectedItem().toString();
                 String nombre = textFieldnombreproducto.getText();
                 int cantidad = Integer.parseInt(textFieldpcantidad.getText());
                 int precioCompra = Integer.parseInt(textFieldprecioprove.getText());
@@ -97,7 +97,7 @@ public class InventarioGUI extends JPanel {
                 int selecfila = table1.getSelectedRow();
                 if (selecfila >= 0) {
                     textFieldid.setText(table1.getValueAt(selecfila, 0).toString());
-                    textField1.setText((String) table1.getValueAt(selecfila, 1));
+                    comboBox1.setSelectedItem((String) table1.getValueAt(selecfila, 1));
                     textFieldnombreproducto.setText((String) table1.getValueAt(selecfila, 2));
                     textFieldpcantidad.setText(table1.getValueAt(selecfila, 3).toString());
                     textFieldprecioprove.setText(table1.getValueAt(selecfila, 4).toString());
@@ -113,7 +113,7 @@ public class InventarioGUI extends JPanel {
     public void clear() {
         textFieldnombreproducto.setText("");
         textFieldprecioprove.setText("");
-        textField1.setText("");
+        comboBox1.setSelectedIndex(0);
         textFieldprecioventa.setText("");
         textFieldpcantidad.setText("");
         textFieldid.setText(""); // Limpia el campo de ID
@@ -151,17 +151,6 @@ public class InventarioGUI extends JPanel {
             JOptionPane.showMessageDialog(null, "Error al mostrar los datos: " + e.getMessage());
         }
     }
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Inventario");
-        frame.setContentPane(new InventarioGUI().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setSize(700, 500);
-        frame.setResizable(false);
-    }
-
-
 
     public JPanel getMainPanel() {
 

@@ -22,7 +22,7 @@ public class GeneradorPDF {
             Font normal = new Font(Font.FontFamily.HELVETICA, 12);
 
             // Título
-            Paragraph titulo = new Paragraph("Ferretería El Tornillo Feliz 🔩", tituloFont);
+            Paragraph titulo = new Paragraph("Ferretería El Charco ", tituloFont);
             titulo.setAlignment(Element.ALIGN_CENTER);
             documento.add(titulo);
 
