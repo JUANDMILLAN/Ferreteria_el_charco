@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import CHAT.servidorChat;
 import CHAT.chatGUI;
-import Servicios.VentaServicio;
 import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class MenuGUI {
@@ -17,7 +16,7 @@ public class MenuGUI {
     private JButton salirButton;
     private JPanel panelContenido;
     private JButton inicioButton;
-    private JComboBox comboBox2;
+    private JButton historialDeVentasButton;
 
     public static void main(String[] args) {
         try {
@@ -84,29 +83,18 @@ public class MenuGUI {
             }
         });
 
-        comboBox2.removeAllItems();
-        comboBox2.addItem("Historial de ventas");
-        comboBox2.addItem("Historial de órdenes");
-
-        comboBox2.addActionListener(new ActionListener() {
+        historialDeVentasButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String seleccion = (String) comboBox2.getSelectedItem();
-                panelContenido.removeAll();
-                panelContenido.setLayout(new BorderLayout());
+                historialVentas historial = new historialVentas();
 
-                if ("Historial de ventas".equals(seleccion)) {
-                    historialVentas historial = new historialVentas();
-                    panelContenido.add(historial.getMainPanel(), BorderLayout.CENTER);
-                } else if ("Historial de órdenes".equals(seleccion)) {
-                    HistorialOrdenesGUI historialOrdenes = new HistorialOrdenesGUI();
-                    panelContenido.add(historialOrdenes.getMainPanel(), BorderLayout.CENTER);
-                }
-
-                panelContenido.revalidate();
-                panelContenido.repaint();
+                panelContenido.removeAll(); // Quita lo que había antes
+                panelContenido.add(historial.getMainPanel(), BorderLayout.CENTER); // Agrega la vista nueva
+                panelContenido.revalidate(); // Refresca el contenedor
+                panelContenido.repaint();    // Lo vuelve a dibujar
             }
         });
+
 
         // Botón Vender
         venderButton.addActionListener(e -> {
@@ -140,6 +128,7 @@ public class MenuGUI {
                 panelContenido.repaint();
             }
         });
+
 
     }
 

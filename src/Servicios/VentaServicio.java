@@ -3,6 +3,7 @@ package Servicios;
 import Entidad.inventarioProductos;
 import Conexion.conexionBD;
 
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
@@ -227,6 +228,24 @@ public class VentaServicio {
         }
 
         return new java.sql.Date(cal.getTimeInMillis());
+    }
+
+    public boolean actualizarEstadoVenta(int idVenta, String nuevoEstado) {
+        String sql = "UPDATE registro_ventas SET estado = ? WHERE id_venta = ?";
+        conexionBD conBD = new conexionBD();
+
+        try (Connection conn = conBD.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nuevoEstado);
+            ps.setInt(2, idVenta);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
