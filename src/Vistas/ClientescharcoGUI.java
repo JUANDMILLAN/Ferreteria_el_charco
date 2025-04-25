@@ -14,10 +14,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-
 import java.awt.*;
 
+/**
+ * La clase {@code ClientescharcoGUI} proporciona una interfaz gráfica para gestionar la información de los clientes.
+ * Permite agregar, editar, eliminar y mostrar los datos de los clientes en una tabla. También muestra información
+ * adicional sobre los clientes, como el total de clientes y el cliente más frecuente.
+ */
 public class ClientescharcoGUI extends JPanel {
     private JPanel mainPanel;
     private JTable table1;
@@ -36,16 +39,20 @@ public class ClientescharcoGUI extends JPanel {
 
     ClientescharcoDAO clientescharcoDAO = new ClientescharcoDAO();
 
+    /**
+     * Constructor de la clase {@code ClientescharcoGUI}. Inicializa los componentes gráficos y configura
+     * los eventos de los botones.
+     */
     public ClientescharcoGUI() {
 
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(1000,1000));
         add(mainPanel);
         textField1.setEnabled(false);
-        mostrarDatos();
-        actualizarTarjetasClientes();
+        mostrarDatos(); // Muestra los datos de los clientes en la tabla
+        actualizarTarjetasClientes(); // Actualiza las tarjetas de clientes
 
-
+        // Configuración del botón para agregar un cliente
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -54,17 +61,16 @@ public class ClientescharcoGUI extends JPanel {
                 String direccion = textFielddireccioncliente.getText();
                 String correo = textFieldcorreocliente.getText();
 
-
+                // Crear un nuevo cliente y agregarlo a la base de datos
                 Clientescharco clientes = new Clientescharco(0, nombre, direccion, telefono, correo);
                 clientescharcoDAO.agregar(clientes);
-                clear();
-                mostrarDatos();
-                actualizarTarjetasClientes();
-
-
+                clear(); // Limpiar los campos de texto
+                mostrarDatos(); // Actualizar los datos en la tabla
+                actualizarTarjetasClientes(); // Actualizar las tarjetas de clientes
             }
         });
 
+        // Configuración del botón para editar un cliente
         editarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -74,34 +80,35 @@ public class ClientescharcoGUI extends JPanel {
                 String correo = textFieldcorreocliente.getText();
                 int id = Integer.parseInt(textField1.getText());
 
-
-
-                Clientescharco clientes = new Clientescharco(id, nombre,  telefono,direccion, correo);
+                // Crear un cliente con los datos modificados y actualizar en la base de datos
+                Clientescharco clientes = new Clientescharco(id, nombre, telefono, direccion, correo);
                 clientescharcoDAO.actualizar(clientes);
-                clear();
-                mostrarDatos();
-                actualizarTarjetasClientes();
-
+                clear(); // Limpiar los campos de texto
+                mostrarDatos(); // Actualizar los datos en la tabla
+                actualizarTarjetasClientes(); // Actualizar las tarjetas de clientes
             }
         });
 
+        // Configuración del botón para eliminar un cliente
         eliminarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int id = Integer.parseInt(textField1.getText());
+                // Eliminar el cliente de la base de datos
                 clientescharcoDAO.eliminar(id);
-                clear();
-                mostrarDatos();
-                actualizarTarjetasClientes();
-
+                clear(); // Limpiar los campos de texto
+                mostrarDatos(); // Actualizar los datos en la tabla
+                actualizarTarjetasClientes(); // Actualizar las tarjetas de clientes
             }
         });
 
+        // Evento para seleccionar un cliente de la tabla
         table1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int selecfila = table1.getSelectedRow();
                 if (selecfila >= 0) {
+                    // Llenar los campos de texto con los datos del cliente seleccionado
                     textField1.setText(table1.getValueAt(selecfila, 0).toString());
                     textFieldnombrecliente.setText((String) table1.getValueAt(selecfila, 1));
                     textFieldtelefonocliente.setText((String) table1.getValueAt(selecfila, 2));
@@ -111,9 +118,11 @@ public class ClientescharcoGUI extends JPanel {
                 }
             }
         });
-
-
     }
+
+    /**
+     * Limpia los campos de texto del formulario.
+     */
     public void clear() {
         textFieldnombrecliente.setText("");
         textFieldtelefonocliente.setText("");
@@ -122,6 +131,9 @@ public class ClientescharcoGUI extends JPanel {
         textField1.setText(""); // Limpia el campo de ID
     }
 
+    /**
+     * Muestra los datos de los clientes en la tabla {@code table1}.
+     */
     public void mostrarDatos() {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("ID");
@@ -132,6 +144,7 @@ public class ClientescharcoGUI extends JPanel {
 
         table1.setModel(modelo);
 
+        // Conexión a la base de datos para obtener los datos de los clientes
         Connection con = new conexionBD().getConnection();
         try {
             Statement st = con.createStatement();
@@ -152,6 +165,11 @@ public class ClientescharcoGUI extends JPanel {
         }
     }
 
+    /**
+     * Obtiene el nombre del cliente más frecuente basado en las ventas realizadas.
+     *
+     * @return Nombre del cliente más frecuente.
+     */
     public String obtenerClienteMasFrecuente() {
         String nombre = "";
         String sql = "SELECT c.nombre FROM registro_ventas rv " +
@@ -172,7 +190,9 @@ public class ClientescharcoGUI extends JPanel {
         return nombre;
     }
 
-
+    /**
+     * Actualiza las tarjetas de información, incluyendo el número total de clientes y el cliente más frecuente.
+     */
     public void actualizarTarjetasClientes() {
         int totalClientes = table1.getRowCount();
         labelClientesTotales.setText(String.valueOf(totalClientes));
@@ -181,6 +201,11 @@ public class ClientescharcoGUI extends JPanel {
         labelClienteFrecuente.setText(clienteFrecuente != null ? clienteFrecuente : "Sin datos");
     }
 
+    /**
+     * Devuelve el panel principal de la interfaz gráfica.
+     *
+     * @return Panel principal de la interfaz.
+     */
     public JPanel getMainPanel() {
         return mainPanel;
     }

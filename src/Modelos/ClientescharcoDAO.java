@@ -5,7 +5,6 @@ import Entidad.Clientescharco;
 import Entidad.inventarioProductos;
 
 import java.awt.*;
-
 import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,9 +12,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Clase que maneja las operaciones de base de datos relacionadas con los clientes.
+ * Permite agregar, eliminar, actualizar y obtener clientes desde la base de datos.
+ */
 public class ClientescharcoDAO {
+
     private Conexion.conexionBD conexionBD = new conexionBD();
 
+    /**
+     * Agrega un nuevo cliente a la base de datos.
+     *
+     * @param clientescharco El cliente a agregar.
+     */
     public void agregar(Clientescharco clientescharco) {
         Connection con = conexionBD.getConnection();
         String query = "INSERT INTO clientes (nombre, telefono, direccion, correo) VALUES (?, ?, ?, ?)";
@@ -43,6 +52,11 @@ public class ClientescharcoDAO {
         }
     }
 
+    /**
+     * Elimina un cliente de la base de datos por su ID.
+     *
+     * @param id El ID del cliente a eliminar.
+     */
     public void eliminar(int id) {
         Connection con = conexionBD.getConnection();
         String query = "DELETE FROM clientes WHERE id_cliente = ?";
@@ -66,6 +80,11 @@ public class ClientescharcoDAO {
         }
     }
 
+    /**
+     * Actualiza la información de un cliente en la base de datos.
+     *
+     * @param clientescharco El cliente con los nuevos datos.
+     */
     public void actualizar(Clientescharco clientescharco) {
         Connection con = conexionBD.getConnection();
         String query = "UPDATE clientes SET nombre = ?, telefono = ?, direccion = ?, correo = ? WHERE id_cliente = ?";
@@ -95,6 +114,11 @@ public class ClientescharcoDAO {
         }
     }
 
+    /**
+     * Obtiene todos los clientes de la base de datos, incluyendo su ID y nombre.
+     *
+     * @return Una lista de clientes.
+     */
     public ArrayList<Clientescharco> obtenerTodos() {
         ArrayList<Clientescharco> lista = new ArrayList<>();
         Connection con = null;
@@ -127,7 +151,16 @@ public class ClientescharcoDAO {
         return lista;
     }
 
+    /**
+     * Clase interna que maneja las operaciones relacionadas con el inventario de productos.
+     */
     public static class InventarioDAO {
+
+        /**
+         * Obtiene todos los productos del inventario desde la base de datos.
+         *
+         * @return Una lista de productos.
+         */
         public ArrayList<inventarioProductos> obtenerProductos() {
             ArrayList<inventarioProductos> lista = new ArrayList<>();
             Connection con = null;
