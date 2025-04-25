@@ -2,8 +2,12 @@ package Vistas;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.RowFilter;
+import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import Entidad.inventarioProductos;
@@ -15,6 +19,10 @@ import Servicios.VentaServicio;
 import utilidades.CorreoFactura;
 import utilidades.GeneradorPDF;
 
+/**
+ * VentasGUI representa la interfaz principal para la gestión de ventas.
+ * Permite seleccionar productos, clientes, empleados y registrar una factura.
+ */
 public class VentasGUI extends JPanel {
     public JPanel mainPanel;
     private JTable table1;
@@ -27,22 +35,28 @@ public class VentasGUI extends JPanel {
     private JComboBox comboClientes;
     private JComboBox comboEmpleados;
     private JComboBox comboEstado;
+    private JTextField buscarProduc;
     private VentaServicio ventaServicio;
+    private JSpinner spinner1;
 
+    /**
+     * Constructor que inicializa la interfaz de ventas y sus eventos.
+     */
     public VentasGUI() {
         ventaServicio = new VentaServicio();
         add(mainPanel);
 
+        spinner1.setModel(new SpinnerNumberModel(1, 1, 1000, 1));
+
         cargarProductosEnTabla();
         cargarCombos();
 
-        // Definir columnas para la tabla de factura
         tablaFactura.setModel(new DefaultTableModel(
                 new Object[][]{},
                 new String[]{"ID", "Nombre", "Precio Unitario", "Cantidad", "Subtotal"}
         ));
 
-        // Acción del botón Agregar
+        // Evento del botón Agregar producto a la factura
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,6 +65,7 @@ public class VentasGUI extends JPanel {
                     int id = Integer.parseInt(table1.getValueAt(filaSeleccionada, 0).toString());
                     String nombre = table1.getValueAt(filaSeleccionada, 2).toString();
                     int precio = Integer.parseInt(table1.getValueAt(filaSeleccionada, 4).toString());
+                    int cantidadSpinner = (int) spinner1.getValue();
 
                     DefaultTableModel modeloFactura = (DefaultTableModel) tablaFactura.getModel();
                     boolean existe = false;
@@ -59,7 +74,7 @@ public class VentasGUI extends JPanel {
                         int idExistente = Integer.parseInt(modeloFactura.getValueAt(i, 0).toString());
                         if (idExistente == id) {
                             int cantidadActual = Integer.parseInt(modeloFactura.getValueAt(i, 3).toString());
-                            cantidadActual++;
+                            cantidadActual += cantidadSpinner;
                             modeloFactura.setValueAt(cantidadActual, i, 3);
                             modeloFactura.setValueAt(cantidadActual * precio, i, 4);
                             existe = true;
@@ -68,7 +83,7 @@ public class VentasGUI extends JPanel {
                     }
 
                     if (!existe) {
-                        Object[] fila = new Object[]{id, nombre, precio, 1, precio};
+                        Object[] fila = new Object[]{id, nombre, precio, cantidadSpinner, precio * cantidadSpinner};
                         modeloFactura.addRow(fila);
                     }
 
@@ -78,9 +93,6 @@ public class VentasGUI extends JPanel {
                 }
             }
         });
-
-
-        // Acción del botón Cancelar
         cancelarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -90,6 +102,8 @@ public class VentasGUI extends JPanel {
                 labelTotal.setText("Total: $ 0.00");
             }
         });
+
+        // Evento del botón Guardar Venta
         guardarVentaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -111,7 +125,6 @@ public class VentasGUI extends JPanel {
                     return;
                 }
 
-                // Calcular total
                 int subtotal = 0;
                 for (int i = 0; i < modeloFactura.getRowCount(); i++) {
                     int cantidad = Integer.parseInt(modeloFactura.getValueAt(i, 3).toString());
@@ -122,10 +135,8 @@ public class VentasGUI extends JPanel {
                 int iva = (int) (subtotal * 0.19);
                 int total = subtotal + iva;
 
-                // Registrar venta
                 int idVenta = ventaServicio.guardarVenta(idCliente, idEmpleado, total, estado);
 
-                // Registrar detalle por producto
                 for (int i = 0; i < modeloFactura.getRowCount(); i++) {
                     int idProducto = Integer.parseInt(modeloFactura.getValueAt(i, 0).toString());
                     int precioUnitario = Integer.parseInt(modeloFactura.getValueAt(i, 2).toString());
@@ -136,21 +147,17 @@ public class VentasGUI extends JPanel {
                     ventaServicio.actualizarStock(idProducto, cantidad);
                 }
 
-
-
-                // ➕ Generar PDF y enviar por correo
-                String nombreCliente = cliente.getNombre(); // o cliente.toString()
-                String correoCliente = cliente.getCorreo(); // asegúrate de tener este método
+                String nombreCliente = cliente.getNombre();
+                String correoCliente = cliente.getCorreo();
 
                 String rutaPDF = GeneradorPDF.generarFacturaPDF(modeloFactura, nombreCliente, total, iva, subtotal);
-                CorreoFactura.enviarFactura("djhon8366@gmail.com", rutaPDF); // tu correo fijo aquí
-                // Abre el PDF automáticamente (opcional)
+                CorreoFactura.enviarFactura("djhon8366@gmail.com", rutaPDF);
+
                 try {
                     java.awt.Desktop.getDesktop().open(new java.io.File(rutaPDF));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-
 
                 JOptionPane.showMessageDialog(null, "Venta registrada y factura enviada.");
                 modeloFactura.setRowCount(0);
@@ -158,8 +165,19 @@ public class VentasGUI extends JPanel {
             }
         });
 
+        // Evento para filtrar productos en la tabla
+        buscarProduc.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String busqueda = buscarProduc.getText().toLowerCase();
+                filtrarTabla(busqueda);
+            }
+        });
     }
 
+    /**
+     * Carga los productos desde la base de datos en la tabla de selección.
+     */
     private void cargarProductosEnTabla() {
         ClientescharcoDAO.InventarioDAO dao = new ClientescharcoDAO.InventarioDAO();
         ArrayList<inventarioProductos> lista = dao.obtenerProductos();
@@ -179,17 +197,20 @@ public class VentasGUI extends JPanel {
         }
 
         table1.setModel(modelo);
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
+        table1.setRowSorter(sorter);
     }
 
+    /**
+     * Carga los datos de clientes y empleados en los JComboBox.
+     */
     private void cargarCombos() {
-        // Cargar clientes
         ClientescharcoDAO clienteDAO = new ClientescharcoDAO();
         ArrayList<Clientescharco> listaClientes = clienteDAO.obtenerTodos();
         for (Clientescharco cliente : listaClientes) {
             comboClientes.addItem(cliente);
         }
 
-        // Cargar empleados
         PersonalcharcoDAO empleadoDAO = new PersonalcharcoDAO();
         ArrayList<Personalcharco> listaEmpleados = empleadoDAO.obtenerTodos();
         for (Personalcharco empleado : listaEmpleados) {
@@ -197,6 +218,9 @@ public class VentasGUI extends JPanel {
         }
     }
 
+    /**
+     * Calcula y actualiza los totales (IVA y total general) de la factura.
+     */
     private void actualizarTotales() {
         DefaultTableModel modeloFactura = (DefaultTableModel) tablaFactura.getModel();
         int subtotal = 0;
@@ -212,5 +236,18 @@ public class VentasGUI extends JPanel {
 
         labelIva.setText("IVA: $ " + iva);
         labelTotal.setText("Total: $ " + total);
+    }
+
+    /**
+     * Filtra la tabla de productos según la búsqueda del usuario.
+     * @param busqueda texto ingresado para buscar productos
+     */
+    private void filtrarTabla(String busqueda) {
+        DefaultTableModel modelo = (DefaultTableModel) table1.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
+        table1.setRowSorter(sorter);
+
+        RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter("(?i)" + busqueda);
+        sorter.setRowFilter(rowFilter);
     }
 }
