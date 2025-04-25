@@ -93,8 +93,6 @@ public class VentasGUI extends JPanel {
                 }
             }
         });
-
-        // Evento del botón Cancelar
         cancelarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
