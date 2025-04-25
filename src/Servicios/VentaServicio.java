@@ -3,19 +3,28 @@ package Servicios;
 import Entidad.inventarioProductos;
 import Conexion.conexionBD;
 
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.*;
 import java.util.Vector;
 
+/**
+ * Clase que gestiona las operaciones relacionadas con la venta: agregar productos a la factura,
+ * registrar ventas, actualizar stock de inventario, obtener reportes de ventas y productos,
+ * y cambiar el estado de las ventas.
+ */
 public class VentaServicio {
 
-    // Agrega un producto a la tablaFactura o aumenta su cantidad si ya existe
+    /**
+     * Agrega un producto a la tabla de factura o aumenta su cantidad si ya existe.
+     * @param tablaFactura La tabla donde se muestran los productos en la factura.
+     * @param producto El producto que se va a agregar.
+     */
     public void agregarProducto(JTable tablaFactura, inventarioProductos producto) {
         DefaultTableModel model = (DefaultTableModel) tablaFactura.getModel();
-
         boolean encontrado = false;
+
         for (int i = 0; i < model.getRowCount(); i++) {
             int idExistente = (int) model.getValueAt(i, 0);
 
@@ -44,7 +53,14 @@ public class VentaServicio {
         }
     }
 
-    // Guarda la venta principal en la tabla registro_ventas, incluyendo el estado
+    /**
+     * Guarda la venta en la tabla de registro de ventas.
+     * @param idCliente El ID del cliente que realiza la compra.
+     * @param idEmpleado El ID del empleado que realiza la venta.
+     * @param total El total de la venta.
+     * @param estado El estado de la venta.
+     * @return El ID de la venta registrada.
+     */
     public int guardarVenta(int idCliente, int idEmpleado, int total, String estado) {
         int idVenta = -1;
         String sql = "INSERT INTO registro_ventas (id_cliente, id_empleado, total, estado, fecha) VALUES (?, ?, ?, ?, NOW())";
@@ -72,8 +88,14 @@ public class VentaServicio {
         return idVenta;
     }
 
-
-    // Guarda el detalle de cada producto vendido
+    /**
+     * Guarda el detalle de cada producto vendido.
+     * @param idVenta El ID de la venta.
+     * @param idProducto El ID del producto vendido.
+     * @param cantidad La cantidad vendida del producto.
+     * @param precioUnitario El precio unitario del producto.
+     * @param subtotal El subtotal por la cantidad vendida del producto.
+     */
     public void guardarDetalleVenta(int idVenta, int idProducto, int cantidad, int precioUnitario, int subtotal) {
         String sql = "INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?)";
 
@@ -93,10 +115,11 @@ public class VentaServicio {
         }
     }
 
-
-
-
-    // Resta la cantidad vendida al inventario
+    /**
+     * Actualiza el stock de un producto después de una venta.
+     * @param idProducto El ID del producto cuyo stock se actualizará.
+     * @param cantidadVendida La cantidad vendida del producto.
+     */
     public void actualizarStock(int idProducto, int cantidadVendida) {
         String sql = "UPDATE inventario_productos SET cantidad_stock = cantidad_stock - ? WHERE id_producto = ?";
 
@@ -113,6 +136,11 @@ public class VentaServicio {
         }
     }
 
+    /**
+     * Obtiene las ventas registradas según el filtro de tiempo (diario, semanal o mensual).
+     * @param filtro El filtro de tiempo (Diario, Semanal, Mensual).
+     * @return Un ResultSet con los resultados de las ventas filtradas.
+     */
     public ResultSet obtenerVentasFiltradas(String filtro) {
         String condicionFecha = "";
 
@@ -141,8 +169,11 @@ public class VentaServicio {
         }
     }
 
-
-
+    /**
+     * Obtiene los productos más vendidos según el filtro de tiempo (diario, semanal o mensual).
+     * @param filtro El filtro de tiempo (Diario, Semanal, Mensual).
+     * @return Un ResultSet con los productos más vendidos.
+     */
     public ResultSet obtenerProductosMasVendidos(String filtro) {
         String condicionFecha = "";
 
@@ -179,8 +210,11 @@ public class VentaServicio {
         }
     }
 
-
-
+    /**
+     * Obtiene los clientes con más compras según el filtro de tiempo (diario, semanal o mensual).
+     * @param filtro El filtro de tiempo (Diario, Semanal, Mensual).
+     * @return Un ResultSet con los clientes top.
+     */
     public ResultSet obtenerClientesTop(String filtro) {
         String condicionFecha = "";
 
@@ -216,8 +250,11 @@ public class VentaServicio {
         }
     }
 
-
-
+    /**
+     * Obtiene una fecha según el filtro de tiempo (diario, semanal o mensual).
+     * @param filtro El filtro de tiempo (Diario, Semanal, Mensual).
+     * @return La fecha calculada según el filtro.
+     */
     public java.sql.Date obtenerFechaFiltro(String filtro) {
         java.util.Calendar cal = java.util.Calendar.getInstance();
 
@@ -230,8 +267,15 @@ public class VentaServicio {
         return new java.sql.Date(cal.getTimeInMillis());
     }
 
+    /**
+     * Actualiza el estado de una venta en la base de datos.
+     * @param idVenta El ID de la venta a actualizar.
+     * @param nuevoEstado El nuevo estado de la venta.
+     * @return true si se actualizó correctamente, false en caso contrario.
+     */
     public boolean actualizarEstadoVenta(int idVenta, String nuevoEstado) {
         String sql = "UPDATE registro_ventas SET estado = ? WHERE id_venta = ?";
+
         conexionBD conBD = new conexionBD();
 
         try (Connection conn = conBD.getConnection();
@@ -248,5 +292,48 @@ public class VentaServicio {
         }
     }
 
+    /**
+     * Verifica si existen productos con stock bajo y marca las filas en la tabla con color rojo.
+     * @param tablaInventario La tabla de inventario donde se verificará el stock bajo.
+     */
+    public void verificarStockBajo(JTable tablaInventario) {
+        String sql = "SELECT id_producto, nombre_producto, cantidad_stock FROM inventario_productos WHERE cantidad_stock < ?";
 
+        conexionBD conBD = new conexionBD();
+        try (Connection conn = conBD.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // Umbral de stock bajo, por ejemplo, 10 unidades
+            ps.setInt(1, 10);
+
+            ResultSet rs = ps.executeQuery();
+            boolean stockBajo = false;
+
+            while (rs.next()) {
+                stockBajo = true;
+                int idProducto = rs.getInt("id_producto");
+                String nombreProducto = rs.getString("nombre_producto");
+                int cantidadStock = rs.getInt("cantidad_stock");
+
+                // Aquí puedes marcar las filas de la tabla con color rojo
+                // Encontrar la fila correspondiente y cambiar el color
+                DefaultTableModel model = (DefaultTableModel) tablaInventario.getModel();
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    int idExistente = (int) model.getValueAt(i, 0);
+                    if (idExistente == idProducto) {
+                        tablaInventario.setRowSelectionInterval(i, i); // Selecciona la fila
+                        tablaInventario.setSelectionBackground(new Color(203,112,92)); // Cambia el color a rojo
+                        break;
+                    }
+                }
+            }
+
+            if (stockBajo) {
+                JOptionPane.showMessageDialog(null, "¡Advertencia! Algunos productos tienen stock bajo.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
