@@ -2,144 +2,82 @@ package Modelos;
 
 import Conexion.conexionBD;
 import Entidad.inventarioProductos;
-
 import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Esta clase proporciona los métodos para interactuar con la tabla de productos en la base de datos.
+ * Permite agregar, eliminar y actualizar productos en el inventario.
+ */
 public class InventarioProductoDAO {
-    //instanciamos un objeto de la clase conexion para poder conectarnos a la base de datos
-    private Conexion.conexionBD conexionBD = new conexionBD();
 
-    //creamos el metodo para agregar un nuevo producto
-    public  void agregar(inventarioProductos inventarioProductos)
-    {
-        //creamos un objeto de la clase conexion para poder conectarnos a la base de datos
-        Connection con = conexionBD.getConnection();
-
-        //creamos la consulta para insertar un nuevo producto
-        String query = "INSERT INTO inventario_productos (categoria, nombre_producto, precio_proveedor, precio_venta, cantidad_stock) VALUES (?, ?, ?, ?, ?)";
-        //intentamos insertar un nuevo producto
-        try
-        {
-            PreparedStatement pst = con.prepareStatement(query);
-            pst.setString(1, inventarioProductos.getCategoria());
-            pst.setString(2, inventarioProductos.getNombre_producto());
-            pst.setInt(3, inventarioProductos.getPrecio_proveedor());
-            pst.setInt(4, inventarioProductos.getPrecio_venta());
-            pst.setInt(5, inventarioProductos.getCantidad_stock());
-//si el resultado es mayor a 0, mostramos un mensaje de que el producto ha sido agregado correctamente
-            int resultado = pst.executeUpdate();
-            if (resultado > 0)
-            {
-                JOptionPane.showMessageDialog(null, "producto agregado correctamente.");
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Error al agregar el producto.");
-            }
-            //si hay un error, mostramos el error
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                if (con != null) con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    //creamos el metodo para eliminar un producto
-    public void eliminar(int id_producto)
-    {
-        //creamos un objeto de la clase conexion para poder conectarnos a la base de datos
-        Connection con = conexionBD.getConnection();
-
-        //creamos la consulta para eliminar un producto
-        String query = "DELETE FROM inventario_productos WHERE id_producto = ?";
-
-//intentamos eliminar un cliente
-        try
-        {
-            PreparedStatement pst = con.prepareStatement(query);
-            pst.setInt(1, id_producto);
-//si el resultado es mayor a 0, mostramos un mensaje de que el producto ha sido eliminado correctamente
-            int resultado = pst.executeUpdate();
-            if (resultado > 0)
-            {
-                JOptionPane.showMessageDialog(null, "producto eliminado correctamente.");
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Error al eliminar el producto.");
-            }
-            //si hay un error, mostramos el error
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                if (con != null) con.close();
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-
-            }
-        }
-
-    }
-    //creamos el metodo para actualizar un producto
-    public void actualizar(inventarioProductos inventarioProductos)
-    {
-        //creamos un objeto de la clase conexion para poder conectarnos a la base de datos
-        Connection con = conexionBD.getConnection();
-        //creamos la consulta para actualizar un producto
-        String query = "UPDATE inventario_productos SET categoria = ?, nombre_producto = ?, precio_proveedor = ?, precio_venta = ?, cantidad_stock = ? WHERE id_producto = ?";
-//intentamos actualizar un producto
+    /**
+     * Agrega un nuevo producto al inventario.
+     *
+     * @param producto El objeto {@link inventarioProductos} que contiene la información del producto a agregar.
+     */
+    public void agregar(inventarioProductos producto) {
+        Connection con = new conexionBD().getConnection();
         try {
-            PreparedStatement pst = con.prepareStatement(query);
-            pst.setString(1, inventarioProductos.getCategoria());
-            pst.setString(2, inventarioProductos.getNombre_producto());
-            pst.setDouble(3, inventarioProductos.getPrecio_proveedor());
-            pst.setDouble(4, inventarioProductos.getPrecio_venta());
-            pst.setInt(5, inventarioProductos.getCantidad_stock());
-            pst.setInt(6, inventarioProductos.getId_producto());
-//si el resultado es mayor a 0, mostramos un mensaje de que el producto ha sido actualizado correctamente
-            int resultado = pst.executeUpdate();
-            if (resultado > 0)
-            {
-                JOptionPane.showMessageDialog(null, "producto actualizado correctamente.");
-            } else
-            {
-                JOptionPane.showMessageDialog(null, "Error al actualizar el producto.");
-            }
+            String query = "INSERT INTO inventario_productos (categoria, nombre_producto, precio_proveedor, precio_venta, cantidad_stock) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, producto.getCategoria());
+            ps.setString(2, producto.getNombre_producto());
+            ps.setInt(3, producto.getPrecio_proveedor()); // Correcto
+            ps.setInt(4, producto.getPrecio_venta());     // Correcto
+            ps.setInt(5, producto.getCantidad_stock());   // Correcto
 
-        }
-        catch (SQLException e)
-        {
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Producto agregado correctamente.");
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                if (con != null) con.close();
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
+            JOptionPane.showMessageDialog(null, "Error al agregar el producto: " + e.getMessage());
         }
     }
- }
+
+    /**
+     * Elimina un producto del inventario basado en su ID.
+     *
+     * @param idProducto El ID del producto a eliminar.
+     */
+    public void eliminar(int idProducto) {
+        Connection con = new conexionBD().getConnection();
+        try {
+            String query = "DELETE FROM inventario_productos WHERE id_producto = ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, idProducto);
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Producto eliminado correctamente.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al eliminar el producto: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Actualiza los detalles de un producto en el inventario.
+     *
+     * @param producto El objeto {@link inventarioProductos} que contiene los nuevos datos del producto.
+     */
+    public void actualizar(inventarioProductos producto) {
+        Connection con = new conexionBD().getConnection();
+        try {
+            String query = "UPDATE inventario_productos SET categoria=?, nombre_producto=?, precio_proveedor=?, precio_venta=?, cantidad_stock=? WHERE id_producto=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, producto.getCategoria());
+            ps.setString(2, producto.getNombre_producto());
+            ps.setInt(3, producto.getPrecio_proveedor()); // Correcto
+            ps.setInt(4, producto.getPrecio_venta());     // Correcto
+            ps.setInt(5, producto.getCantidad_stock());   // Correcto
+            ps.setInt(6, producto.getId_producto());      // Correcto
+
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Producto actualizado correctamente.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al actualizar el producto: " + e.getMessage());
+        }
+    }
+}

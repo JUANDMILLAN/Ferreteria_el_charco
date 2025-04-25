@@ -79,6 +79,7 @@ public class VentasGUI extends JPanel {
             }
         });
 
+
         // Acción del botón Cancelar
         cancelarButton.addActionListener(new ActionListener() {
             @Override

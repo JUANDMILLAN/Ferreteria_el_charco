@@ -8,14 +8,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 
+/**
+ * Clase que representa el panel principal de la interfaz de ventas.
+ * Este panel muestra tres tablas con información relacionada a las ventas, productos y clientes,
+ * y permite aplicar filtros para ver la información según diferentes criterios de fecha.
+ */
 public class HomePanel extends JPanel {
     public JPanel mainPanel;
-    public JTable table1;
-    public JTable table2;
-    public JTable table3;
+    public JTable table1; // Tabla de ventas totales
+    public JTable table2; // Tabla de productos más vendidos
+    public JTable table3; // Tabla de clientes top
     private JComboBox<String> comboBox1; // Filtro: Diario, Semanal, Mensual
     private JComboBox<String> comboBox2; // Cambiar estado: Pendiente, Enviado, Pagado
 
+    /**
+     * Constructor de la clase HomePanel.
+     * Configura los componentes de la interfaz, incluyendo la inicialización de las tablas y los comboBoxes,
+     * y configura los ActionListeners para los eventos de los comboBoxes.
+     */
     public HomePanel() {
         add(mainPanel);
 
@@ -71,6 +81,15 @@ public class HomePanel extends JPanel {
         });
     }
 
+    /**
+     * Carga los datos filtrados en las tablas según el filtro de fecha seleccionado.
+     * Las tablas que se actualizan son:
+     * - tabla1: Ventas totales.
+     * - tabla2: Productos más vendidos.
+     * - tabla3: Clientes top.
+     *
+     * @param filtro El filtro de fecha (Diario, Semanal, Mensual) que se aplicará.
+     */
     public void cargarDatosFiltrados(String filtro) {
         VentaServicio servicio = new VentaServicio();
 
@@ -128,6 +147,11 @@ public class HomePanel extends JPanel {
         }
     }
 
+    /**
+     * Devuelve el panel principal que contiene todos los componentes de la interfaz de usuario.
+     *
+     * @return El panel principal de la interfaz.
+     */
     public JPanel getMainPanel() {
         return mainPanel;
     }
