@@ -29,6 +29,7 @@ public class ProveedoresGUI extends JPanel {
     private JTextField textField1; // Campo de texto para ingresar el nombre del proveedor
     private JTextField textField2; // Campo de texto para ingresar el contacto del proveedor
     private JTextField textField3; // Campo de texto para mostrar el ID del proveedor seleccionado
+    private JTextField textField4;
     int filas = 0; // Variable para almacenar la fila seleccionada en la tabla
 
     // Instancia de ProveedorescharcoDAO para manejar las operaciones con la base de datos
@@ -51,9 +52,10 @@ public class ProveedoresGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String nombre = textField1.getText();
                 String contacto = textField2.getText();
+                String productosuministro = textField4.getText();
 
                 // Crear un objeto Proveedorescharco con los datos del formulario
-                Proveedorescharco proveedorescharco = new Proveedorescharco(0, nombre, contacto);
+                Proveedorescharco proveedorescharco = new Proveedorescharco(0, nombre, contacto, productosuministro);
                 proveedorescharcoDAO.agregar(proveedorescharco); // Agregar el nuevo proveedor
                 clear(); // Limpiar los campos
                 mostrarDatos(); // Actualizar la tabla con los nuevos datos
@@ -78,9 +80,10 @@ public class ProveedoresGUI extends JPanel {
                 int id_proveedor = Integer.parseInt(textField3.getText());
                 String nombre = textField1.getText();
                 String contacto = textField2.getText();
+                String productosuministro = textField4.getText();
 
                 // Crear un objeto Proveedorescharco con los datos del formulario
-                Proveedorescharco proveedorescharco = new Proveedorescharco(id_proveedor, nombre, contacto);
+                Proveedorescharco proveedorescharco = new Proveedorescharco(id_proveedor, nombre, contacto, productosuministro);
                 proveedorescharcoDAO.actualizar(proveedorescharco); // Actualizar el proveedor
                 clear(); // Limpiar los campos
                 mostrarDatos(); // Actualizar la tabla
@@ -98,6 +101,7 @@ public class ProveedoresGUI extends JPanel {
                     textField3.setText(table1.getValueAt(selecfila, 0).toString()); // ID
                     textField1.setText(table1.getValueAt(selecfila, 1).toString());
                     textField2.setText(table1.getValueAt(selecfila, 2).toString());
+                    textField4.setText(table1.getValueAt(selecfila, 3).toString());
                     filas = selecfila;
                 }
             }
@@ -111,6 +115,7 @@ public class ProveedoresGUI extends JPanel {
         textField1.setText("");
         textField2.setText("");
         textField3.setText("");
+        textField4.setText("");
     }
 
     /**
@@ -122,6 +127,7 @@ public class ProveedoresGUI extends JPanel {
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
         modelo.addColumn("Contacto");
+        modelo.addColumn("Producto Suministro");
 
         table1.setModel(modelo);
 
@@ -131,10 +137,11 @@ public class ProveedoresGUI extends JPanel {
             String query = "SELECT * FROM proveedores"; // Consulta para obtener los proveedores
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
-                Object[] fila = new Object[3];
+                Object[] fila = new Object[4];
                 fila[0] = rs.getInt("id_proveedor");
                 fila[1] = rs.getString("nombre");
                 fila[2] = rs.getString("contacto");
+                fila[3] = rs.getString("productosuministro");
 
                 modelo.addRow(fila); // Agregar fila a la tabla
             }
