@@ -10,6 +10,7 @@ public class Proveedorescharco {
     private int id_proveedor;
     private String nombre;
     private String contacto;
+    private String productosuministro;
 
     /**
      * Constructor de la clase `Proveedorescharco`, utilizado para inicializar un nuevo proveedor
@@ -19,10 +20,11 @@ public class Proveedorescharco {
      * @param nombre El nombre del proveedor.
      * @param contacto El contacto del proveedor.
      */
-    public Proveedorescharco(int id_proveedor, String nombre, String contacto) {
+    public Proveedorescharco(int id_proveedor, String nombre, String contacto, String productosuministro) {
         this.id_proveedor = id_proveedor;
         this.nombre = nombre;
         this.contacto = contacto;
+        this.productosuministro = productosuministro;
     }
 
     // Métodos Getter y Setter
@@ -78,6 +80,12 @@ public class Proveedorescharco {
      * @param contacto El contacto del proveedor.
      */
     public void setContacto(String contacto) {
-        this.contacto = contacto;
+        this.contacto = contacto;}
+
+    public String getProductosuministro() {
+        return productosuministro;
+    }
+    public void setProductosuministro(String productosuministro) {
+        this.productosuministro = productosuministro;
     }
 }
